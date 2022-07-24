@@ -59,13 +59,22 @@ class EmojiRouletteController{
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": "Remaining:    *" + count+"*",
+                    "text": "Remaining:    " + this.getProgressEmojiSequanceText(count),
                 }
             },
             {
                 "type": "divider"
             }
         ]
+    }
+
+    private getProgressEmojiSequanceText(count: number): string{
+        if (count==0) return ":ghost:";
+        let result = ":bomb: ";
+        for (let i=0; i<count-1; ++i){
+            result += ":black_cat: "
+        }
+        return result;
     }
 
     private async initEmojiMap(){

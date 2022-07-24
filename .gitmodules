@@ -1,0 +1,3 @@
+[submodule "src/data/emoji"]
+	path = src/data/emoji
+	url = https://gist.github.com/nickgrealy/f3f27874d306a5d5048f02f0d3e14c07
