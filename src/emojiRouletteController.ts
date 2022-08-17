@@ -4,6 +4,7 @@ import { makeZeroPadding, sleep } from "./util";
 import log4js from 'log4js'
 import DefaultEmojiList from "./defaultEmojiList";
 import IntCounter from "./intCounter";
+import { RunningConfig } from "./runningConfig";
 
 type BlockTextList = ({
     type: string; text: {
@@ -26,14 +27,19 @@ export default
 class EmojiRouletteController{
     private emojiList: string[] = []
     private readonly defaultEmojiList: DefaultEmojiList = new DefaultEmojiList();
-    private maxRemainingCount = 3;
-    private remainingCount: IntCounter = new IntCounter(this.maxRemainingCount);
+    private get maxRemainingCount(){
+        return this.runningConfig.data.maxRemaining
+    }
+    private remainingCount: IntCounter;
 
     private postingProgressMessage: PostedMessageInfo = new PostedMessageInfo(undefined);
 
     constructor(
-        private readonly slackAction: SlackActionWrapper
-    ){}
+        private readonly slackAction: SlackActionWrapper,
+        private readonly runningConfig: RunningConfig
+    ){
+        this.remainingCount = new IntCounter(this.maxRemainingCount);
+    }
 
     public async restartRoulette(){
         await this.initEmojiMap()
@@ -104,6 +110,10 @@ class EmojiRouletteController{
         const list = this.popRandomEmojiList();
 
         for (const emoji of list){
+            
+            // 禁止絵文字を除外
+            if (this.runningConfig.data.invalidList.includes(emoji)) continue;
+
             this.slackAction.addEmoji(emoji, channelId, timeStamp);
         }
 
@@ -127,8 +137,8 @@ class EmojiRouletteController{
 
                 if (indexList.includes(randomIndex)===true) continue;
 
-                const isInrange = 0<=randomIndex && randomIndex<this.emojiList.length - 1;
-                if (isInrange===false) continue;
+                const isInRange = 0<=randomIndex && randomIndex<this.emojiList.length - 1;
+                if (isInRange===false) continue;
 
                 break;
             }

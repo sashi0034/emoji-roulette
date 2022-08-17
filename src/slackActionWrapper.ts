@@ -80,7 +80,7 @@ class SlackActionWrapper{
         return result;
     }
 
-    public async joinCahnnel(channelId: string){
+    public async joinChannel(channelId: string){
         const result = await this.app.client.conversations.join({
             token: Config.botToken,
             channel: channelId
@@ -91,7 +91,7 @@ class SlackActionWrapper{
         return result;
     }
 
-    public async leaveCahnnel(channelId: string){
+    public async leaveChannel(channelId: string){
         const result = await this.app.client.conversations.leave({
             token: Config.botToken,
             channel: channelId

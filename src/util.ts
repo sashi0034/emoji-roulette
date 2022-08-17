@@ -4,7 +4,7 @@ export function makeZeroPadding(num: number, length: number){
 	return ( Array(length).join('0') + num ).slice( -length );
 }
 
-export function getUserMentionText(userId: string){
+export function getUserMentionLiteral(userId: string){
 	return "<@" + userId + ">";
 }
 
